@@ -33,7 +33,8 @@ module.exports = {
     },
     icons1: {
         color: 'white',
-        fontSize: 30,
+      width:35,
+      alignItems: 'center'
     },
     logo2: {
         // width: 200,
@@ -41,5 +42,15 @@ module.exports = {
         resizeMode: 'contain',
         // backgroundColor: 'white',
         width: 100,
+    },
+    searchbar: {
+        width: '90%',
+        backgroundColor: 'white',
+        borderRadius: 30,
+        paddingVertical: 10,
+        paddingHorizontal: 20,
+        marginTop: 10,
+        fontSize: 18,
+        alignSelf: 'center',
     },
 }

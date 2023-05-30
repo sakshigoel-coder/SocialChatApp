@@ -2,14 +2,25 @@ import { StyleSheet, Text, View, Image } from 'react-native'
 import React from 'react'
 import { icons1, logo2 } from '../CommonCss/pagecss'
 import Ionicons from 'react-native-vector-icons/Ionicons';
-const TopNavbar = ({navigation}) => {
+const TopNavbar = ({navigation, page }) => {
     return (
         <View style={styles.container}>
              <Image source={require('../../assests/logo.png')} style={logo2} />
-             <Ionicons name="chatbubbles" size={24} color="black" style={icons1} onPress
-                ={
-                    () => navigation.navigate('All_Chats')
-                } />
+             {
+                page === 'MainPage' &&
+                <Ionicons name="chatbubbles" size={24} color="black" style={icons1} onPress
+                    ={
+                        () => navigation.navigate('All_Chats')
+                    } />
+            }
+
+             {
+                page === 'My_UserProfile' &&
+                <Ionicons name="settings-sharp" size={24} color="black" style={icons1} onPress
+                    ={
+                        () => navigation.navigate('Settings_1')
+                    } />
+            }
         </View>
     )
 }

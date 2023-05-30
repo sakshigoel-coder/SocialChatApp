@@ -13,6 +13,10 @@ import Signup_EnterEmail from './src/screens/LoginSignup/Signup/Signup_EnterEmai
 import Signup_EnterVerificationCode from './src/screens/LoginSignup/Signup/Signup_EnterVerificationCode';
 import Mainpage from './src/screens/MainPage/MainPage';
 import All_Chats from './src/screens/ChatSection/All_Chats';
+import SearchUserPage from './src/screens/MainPage/SearchUserPage';
+import NotificationPage from './src/screens/MainPage/NotificationPage';
+import My_UserProfile from './src/screens/profile/My_UserProfile';
+import Settings1 from './src/screens/Settings/Settings1';
 
 const Stack = createNativeStackNavigator();
 
@@ -54,6 +58,27 @@ export default function App() {
             animation: 'slide_from_bottom'
           }}
         />
+        
+        <Stack.Screen name="SearchUserPage" component={SearchUserPage}
+
+          options={{
+            animation:'slide_from_left'
+          }}
+        />
+
+        <Stack.Screen name="NotificationPage" component={NotificationPage}
+        options={{
+          animation:'slide_from_left'
+        }}
+        />
+
+        <Stack.Screen name="My_UserProfile" component={My_UserProfile}
+
+          options={{
+            animation: 'slide_from_left'
+          }}
+        />
+           <Stack.Screen name="Settings_1" component={Settings1} />
       </Stack.Navigator>
     </NavigationContainer>
   );
