@@ -22,11 +22,11 @@ module.exports = {
         borderRadius: 10,
         borderColor: 'white',
         borderWidth: 1,
-        fontSize: 25,
-        color: 'white',
-        textAlign: 'center',
         paddingVertical: 10,
         marginVertical: 10,
+        color: 'white',
+        textAlign: 'center',
+        fontSize:20
     },
     formTextLinkRight: {
         color: 'gray',
