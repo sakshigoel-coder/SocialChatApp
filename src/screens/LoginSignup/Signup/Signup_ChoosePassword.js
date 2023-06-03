@@ -19,28 +19,32 @@ const Signup_ChoosePassword = ({ navigation,route }) => {
             Alert.alert('Password does not match')
         }
         else {
-            setLoading(true)
-            fetch('http://192.168.0.100/signup', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ email: email, username: username, password: password })
+            setLoading(true);
+            fetch('http://192.168.0.100:3000/signup', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json'
+              },
+              body: JSON.stringify({ email: email, username: username, password: password })
             })
-                .then(res => res.json()).then(
-                    data => {
-                        if (data.message === "User Registered Successfully") {
-                            setLoading(false)
-                            Alert.alert(data.message);
-                            navigation.navigate('Login')
-                        }
-                        else {
-                            setLoading(false)
-                            Alert.alert("Please try again");
-                        }
-                    }
-                )
-        }
+              .then(res => res.json())
+              .then(data => {
+                if (data.message === "User Registered Successfully") {
+                  setLoading(false);
+                  Alert.alert(data.message);
+                  navigation.navigate('Login');
+                } else {
+                  setLoading(false);
+                  Alert.alert("Please try again");
+                }
+              })
+              .catch(error => {
+                setLoading(false);
+                console.error(error);
+                Alert.alert('Network Error');
+              });
+          }
+          
     }
 
     return (

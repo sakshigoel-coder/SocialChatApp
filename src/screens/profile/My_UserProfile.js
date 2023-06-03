@@ -1,12 +1,54 @@
-import { StyleSheet, Text, View, StatusBar,ScrollView,Image } from 'react-native'
-import React from 'react'
+import { StyleSheet, Text, View, StatusBar,ScrollView,Image,ActivityIndicator, Alert } from 'react-native'
+import React, { useEffect,useState } from 'react'
 import { containerFull } from '../../CommonCss/pagecss'
 import { formHead } from '../../CommonCss/formcss'
 import Bottomnavbar from '../../components/Bottomnavbar';
 import TopNavbar from '../../components/TopNavbar';
-
+import AsyncStorage from '@react-native-async-storage/async-storage'
+import Foundation from 'react-native-vector-icons/Foundation';
 
 const My_UserProfile = ({ navigation }) => {
+    const [userdata, setUserdata] = useState(null)
+
+    const loaddata = async () => {
+        try {
+          const value = await AsyncStorage.getItem('user');
+          if (value) {
+            const token = JSON.parse(value).token;
+            const email = JSON.parse(value).user.email;
+            fetch('http://192.168.0.100:3000/userdata', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + token
+              },
+              body: JSON.stringify({ email: email })
+            })
+              .then(res => res.json())
+              .then(data => {
+                if (data.message === 'User Found') {
+                  setUserdata(data.user);
+                } else {
+                  Alert.alert('Login Again');
+                  navigation.navigate('Login');
+                }
+              })
+              .catch(err => {
+                navigation.navigate('Login');
+              });
+          } else {
+            navigation.navigate('Login');
+          }
+        } catch (err) {
+          navigation.navigate('Login');
+        }
+      };
+    
+      useEffect(() => {
+        loaddata();
+      }, []);
+
+    console.log('userdata ', userdata)
     const data = {
         username: 'Aman Dhattarwal',
         followers: 1100,
@@ -41,54 +83,67 @@ const My_UserProfile = ({ navigation }) => {
             <StatusBar />
             <TopNavbar navigation={navigation} page={"My_UserProfile"} />
             <Bottomnavbar navigation={navigation} page={"My_UserProfile"} />
-
-            <ScrollView>
-                <View style={styles.c1}>
-                    <Image style={styles.profilepic} source={{ uri: data.profile_image }} />
-                    <Text style={styles.txt}>@{data.username}</Text>
-
-                    <View style={styles.c11}>
-                        <View style={styles.c111}>
-                            <Text style={styles.txt1}>Followers</Text>
-                            <Text style={styles.txt2}>{data.followers}</Text>
-                        </View>
-                        <View style={styles.vr1}></View>
-                        <View style={styles.c111}>
-                            <Text style={styles.txt1}>Following</Text>
-                            <Text style={styles.txt2}>{data.following}</Text>
-                        </View>
-                        <View style={styles.vr1}></View>
-                        <View style={styles.c111}>
-                            <Text style={styles.txt1}>Posts</Text>
-                            <Text style={styles.txt2}>{data.posts.length}</Text>
-                        </View>
-                    </View>
-
-                    <Text style={styles.description}>{data.description}</Text>
+        {/* Add TopNavbar and Bottomnavbar components */}
+        <Foundation name="refresh" size={30} color="white" style={styles.refresh} onPress={loaddata} />
+        {userdata ? (
+          <ScrollView>
+            <View style={styles.c1}>
+              {userdata.profilepic ? (
+                <Image style={styles.profilepic} source={{ uri: userdata.profilepic }} />
+              ) : (
+                <Image style={styles.profilepic} source={require('../../../assests/nopic.png')} />
+              )}
+              <Text style={styles.txt}>@{userdata.username}</Text>
+  
+              <View style={styles.c11}>
+                <View style={styles.c111}>
+                  <Text style={styles.txt1}>Followers</Text>
+                  <Text style={styles.txt2}>{userdata.followers.length}</Text>
                 </View>
-                <View style={styles.c1}>
-                    <Text style={styles.txt}>Your Posts</Text>
-                    <View style={styles.c13}>
-                        {
-                            data.posts.map(
-                                (item) => {
-                                    return (
-                                        <Image key={item.id} style={styles.postpic}
-                                            source={{ uri: item.post_image }}
-                                        />
-                                    )
-                                }
-                            )
-                        }
-                    </View>
+                <View style={styles.vr1}></View>
+                <View style={styles.c111}>
+                  <Text style={styles.txt1}>Following</Text>
+                  <Text style={styles.txt2}>{userdata.following.length}</Text>
                 </View>
+                <View style={styles.vr1}></View>
+                <View style={styles.c111}>
+                  <Text style={styles.txt1}>Posts</Text>
+                  <Text style={styles.txt2}>{userdata.posts.length}</Text>
+                </View>
+              </View>
+  
+              {
+                                userdata.description.length > 0 &&
+                                <Text style={styles.description}>{userdata.description}</Text>
+                            }
 
-            </ScrollView>
-
-
-        </View>
-    )
+            </View>
+  
+            {userdata.posts.length > 0 ? (
+              <View style={styles.c1}>
+                <Text style={styles.txt}>Your Posts</Text>
+                <View style={styles.c13}>
+                  {userdata.posts.map((item) => (
+                    <Image key={item.id} style={styles.postpic} source={{ uri: item.post_image }} />
+                  ))}
+                </View>
+              </View>
+            ) : (
+              <View style={styles.c2}>
+                 <Text style={styles.txt1}>You have not posted anything yet</Text>
+</View>
+)
 }
+</ScrollView>
+) : (
+<ActivityIndicator size="large" color="white" />
+)}
+
+</View>
+);
+}
+    
+
 
 export default My_UserProfile
 
@@ -159,5 +214,17 @@ const styles = StyleSheet.create({
         flexWrap: 'wrap',
         marginBottom: 20,
         justifyContent: 'center'
+    },
+    c2: {
+        width: '100%',
+        alignItems: 'center',
+        justifyContent: 'center',
+        height: 200
+    },
+    refresh: {
+        position: 'absolute',
+        top: 50,
+        right: 5,
+        zIndex: 1,
     }
 })

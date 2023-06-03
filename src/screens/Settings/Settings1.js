@@ -2,8 +2,15 @@ import { StyleSheet, Text, View } from 'react-native'
 import React from 'react'
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { formHead } from '../../CommonCss/formcss';
+import AsyncStorage from '@react-native-async-storage/async-storage'
 
 const Settings1 = ({ navigation }) => {
+ 
+    const logout = () => {
+        AsyncStorage.removeItem('user').then(() => {
+            navigation.navigate('Login')
+        })
+    }
     return (
         <View style={styles.container}>
         <View style={{marginTop:"2%",left:10}}>
@@ -15,9 +22,15 @@ const Settings1 = ({ navigation }) => {
             <Text style={formHead}>Settings</Text>
 
 
-            <Text style={styles.txt1}>Edit Profile</Text>
-            <Text style={styles.txt1}>Change Password</Text>
+            <Text style={styles.txt1}
+             onPress={() => navigation.navigate('EditProfile')}>Edit Profile</Text>
+
+            <Text style={styles.txt1}
+              onPress={() => navigation.navigate('ChangePassword')}>Change Password</Text>
             <Text style={styles.txt1}>Customer Support</Text>
+            <Text style={styles.txt1} onPress={
+                () => logout()
+            }>Logout</Text>
         </View>
     )
 }

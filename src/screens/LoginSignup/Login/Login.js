@@ -2,6 +2,7 @@ import { StyleSheet, Text, View, Image, TextInput, ActivityIndicator, Alert } fr
 import React from 'react'
 import { containerFull, hr80, logo1 } from '../../../CommonCss/pagecss'
 import { formbtn, formHead, formInput, formTextLinkCenter, formTextLinkRight } from '../../../CommonCss/formcss'
+import AsyncStorage from '@react-native-async-storage/async-storage'
 
 const Login = ({ navigation }) => {
     const [email, setEmail] = React.useState('')
@@ -25,13 +26,14 @@ const Login = ({ navigation }) => {
                 })
             })
                 .then(res => res.json())
-                .then(data => {
+                .then(async data => {
                     if (data.error) {
                         setLoading(false)
                         Alert.alert(data.error)
                     }
                     else if (data.message == 'Successfully Signed In') {
                         setLoading(false)
+                        await AsyncStorage.setItem('user', JSON.stringify(data))
                         navigation.navigate('MainPage', { data })
                     }
                 })
