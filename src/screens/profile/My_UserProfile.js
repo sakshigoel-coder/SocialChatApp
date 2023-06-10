@@ -85,59 +85,71 @@ const My_UserProfile = ({ navigation }) => {
             <Bottomnavbar navigation={navigation} page={"My_UserProfile"} />
         {/* Add TopNavbar and Bottomnavbar components */}
         <Foundation name="refresh" size={30} color="white" style={styles.refresh} onPress={loaddata} />
-        {userdata ? (
-          <ScrollView>
-            <View style={styles.c1}>
-              {userdata.profilepic ? (
-                <Image style={styles.profilepic} source={{ uri: userdata.profilepic }} />
-              ) : (
-                <Image style={styles.profilepic} source={require('../../../assests/nopic.png')} />
-              )}
-              <Text style={styles.txt}>@{userdata.username}</Text>
-  
-              <View style={styles.c11}>
-                <View style={styles.c111}>
-                  <Text style={styles.txt1}>Followers</Text>
-                  <Text style={styles.txt2}>{userdata.followers.length}</Text>
-                </View>
-                <View style={styles.vr1}></View>
-                <View style={styles.c111}>
-                  <Text style={styles.txt1}>Following</Text>
-                  <Text style={styles.txt2}>{userdata.following.length}</Text>
-                </View>
-                <View style={styles.vr1}></View>
-                <View style={styles.c111}>
-                  <Text style={styles.txt1}>Posts</Text>
-                  <Text style={styles.txt2}>{userdata.posts.length}</Text>
-                </View>
-              </View>
-  
-              {
+        {
+                userdata ?
+                    <ScrollView>
+                        <View style={styles.c1}>
+                            {
+                                userdata.profilepic.length > 0 ?
+                                    <Image style={styles.profilepic} source={{ uri: userdata.profilepic }} />
+                                    :
+                                    <Image style={styles.profilepic} source={nopic} />
+                            }
+                            <Text style={styles.txt}>@{userdata.username}</Text>
+
+                            <View style={styles.c11}>
+                                <View style={styles.c111}>
+                                    <Text style={styles.txt1}>Followers</Text>
+                                    <Text style={styles.txt2}>{userdata.followers.length}</Text>
+                                </View>
+                                <View style={styles.vr1}></View>
+                                <View style={styles.c111}>
+                                    <Text style={styles.txt1}>Following</Text>
+                                    <Text style={styles.txt2}>{userdata.following.length}</Text>
+                                </View>
+                                <View style={styles.vr1}></View>
+                                <View style={styles.c111}>
+                                    <Text style={styles.txt1}>Posts</Text>
+                                    <Text style={styles.txt2}>{userdata.posts.length}</Text>
+                                </View>
+                            </View>
+
+                            {
                                 userdata.description.length > 0 &&
                                 <Text style={styles.description}>{userdata.description}</Text>
                             }
 
-            </View>
-  
-            {userdata.posts.length > 0 ? (
-              <View style={styles.c1}>
-                <Text style={styles.txt}>Your Posts</Text>
-                <View style={styles.c13}>
-                  {userdata.posts.map((item) => (
-                    <Image key={item.id} style={styles.postpic} source={{ uri: item.post_image }} />
-                  ))}
-                </View>
-              </View>
-            ) : (
-              <View style={styles.c2}>
-                 <Text style={styles.txt1}>You have not posted anything yet</Text>
-</View>
-)
-}
-</ScrollView>
-) : (
-<ActivityIndicator size="large" color="white" />
-)}
+
+                        </View>
+                        {
+                            userdata.posts.length > 0 ?
+                                <View style={styles.c1}>
+                                    <Text style={styles.txt}>Your Posts</Text>
+                                    <View style={styles.c13}>
+                                        {
+                                            userdata.posts?.map(
+                                                (item) => {
+                                                    return (
+                                                        <Image key={item.post} style={styles.postpic}
+                                                            source={{ uri: item.post }}
+                                                        />
+                                                    )
+                                                }
+                                            )
+                                        }
+                                    </View>
+                                </View>
+                                :
+                                <View style={styles.c2}>
+                                    <Text style={styles.txt1}>You have not posted anything yet</Text>
+                                </View>
+                        }
+
+                    </ScrollView>
+
+                    :
+                    <ActivityIndicator size="large" color="white" />
+            }
 
 </View>
 );
@@ -205,9 +217,10 @@ const styles = StyleSheet.create({
         paddingVertical: 20,
     },
     postpic: {
-        width: '30%',
-        height: 120,
-        margin: 5
+        width: 120,
+        height: 150,
+        margin:'2%',
+        resizeMode:'cover'
     },
     c13: {
         flexDirection: 'row',
